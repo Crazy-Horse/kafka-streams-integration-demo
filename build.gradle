@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.2.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'java'
+    id 'application'
 }
 
 group = 'com.csv.integration.streams.demo'
@@ -25,3 +26,8 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+application {
+    mainClassName = "com.csv.integration.kafka.streams.demo.KafkaStreamsIntegrationDemoApplication"
+}
+

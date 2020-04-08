@@ -16,6 +16,7 @@ public class Employee implements Serializable {
     List<Address> addresses;
     private Integer yearsOfService;
     private String departmentId;
+    private Long managerId;
 
     public Employee() {}
 
@@ -65,5 +66,13 @@ public class Employee implements Serializable {
 
     public void setDepartmentId(String departmentId) {
         this.departmentId = departmentId;
+    }
+
+    public Long getManagerId() {
+        return managerId;
+    }
+
+    public void setManagerId(Long managerId) {
+        this.managerId = managerId;
     }
 }

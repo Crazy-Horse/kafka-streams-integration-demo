@@ -19,13 +19,22 @@ public class EmployeeService {
 
     public EmployeeDTO enrich(EmployeeDTO employeeDTO) {
         Optional<Employee> emp = employeeRepository.findById(employeeDTO.getEmployeeId());
-        // TODO: 3/24/20 combine data
+
         if (emp.isPresent()) {
             Employee employee = emp.get();
             if (employee.getAddresses() != null && employee.getAddresses().size() > 0) {
                 employeeDTO.setAddresses(employee.getAddresses());
             }
+            save(employee, employeeDTO);
         }
         return employeeDTO;
+    }
+
+    public void save(Employee employee, EmployeeDTO emp) {
+        employee.setDepartmentId(emp.getDepartmentId());
+        employee.setYearsOfService(emp.getYearsOfService());
+        employee.setManagerId(emp.getManagerId());
+
+        employeeRepository.save(employee);
     }
 }

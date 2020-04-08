@@ -51,8 +51,6 @@ public class KafkaStreamsIntegrationDemoApplication {
         final StreamsBuilder builder = new StreamsBuilder();
         final KStream<String, String> source = builder.stream("transformations-input-topic");
 
-        // TODO: 3/24/20 validate raw input data
-
 
         // Split the stream into two streams, one containing all valid records, and the other containing all other records.
         KStream<String, String>[] branches = source
@@ -60,8 +58,6 @@ public class KafkaStreamsIntegrationDemoApplication {
         KStream<String, String> validStream = branches[0];
         KStream<String, String> othersStream = branches[1];
 
-        // TODO: 4/2/20 logging is not working
-        log.info("after branch");
         // Map value into an Employee DTO
         KStream<String, EmployeeDTO> validEmpStream = validStream.map((key, value) -> KeyValue.pair(key, EmployeeDTO.newInstance(value)))
 
