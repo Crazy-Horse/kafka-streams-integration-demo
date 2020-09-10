@@ -2,11 +2,14 @@ package com.csv.integration.kafka.streams.demo;
 
 import com.csv.integration.kafka.streams.demo.data.EmployeeDTO;
 import com.csv.integration.kafka.streams.demo.service.EmployeeService;
+import com.csv.integration.kafka.streams.demo.service.FileWatcherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.io.IOException;
+import java.nio.file.*;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import org.apache.kafka.common.serialization.Serdes;
@@ -19,25 +22,70 @@ import org.apache.kafka.streams.kstream.KStream;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import static java.nio.file.StandardWatchEventKinds.*;
+
 @SpringBootApplication
 public class KafkaStreamsIntegrationDemoApplication {
 
     private static final Logger log = LoggerFactory.getLogger(KafkaStreamsIntegrationDemoApplication.class);
     private final EmployeeService employeeService;
+    private final FileWatcherService fileWatcherService;
 
-    public KafkaStreamsIntegrationDemoApplication(EmployeeService service) {
+    public KafkaStreamsIntegrationDemoApplication(EmployeeService service, FileWatcherService fileService) {
         this.employeeService = service;
+        this.fileWatcherService = fileService;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        if (args.length == 0 || args.length > 2)
+            usage();
+        if (args[0].equals("-r")) {
+            if (args.length < 2)
+                usage();
+        }
+
         ConfigurableApplicationContext context = new SpringApplicationBuilder(KafkaStreamsIntegrationDemoApplication.class)
                 .web(WebApplicationType.NONE)
                 .run(args);
         context.getBean(KafkaStreamsIntegrationDemoApplication.class).runDemo(context);
+
         context.close();
     }
 
-    private void runDemo(ConfigurableApplicationContext args) {
+
+    private static void usage() {
+        System.err.println("usage: java WatchDir [-r] dir");
+        System.exit(-1);
+    }
+
+    private void runDemo(ConfigurableApplicationContext applicationContext) {
+
+        // parse arguments
+        String directory = System.getProperty("dir");
+        boolean recursive = false;
+        int dirArg = 0;
+        if (System.getProperty("recursive").equals("-r")) {
+            recursive = true;
+        }
+
+        // register directory and process its events
+        Path dir = Paths.get(directory);
+
+
+        try {
+            if (recursive) {
+                System.out.format("Scanning %s ...\n", dir);
+                fileWatcherService.registerAll(dir);
+            } else {
+                fileWatcherService.register(dir);
+            }
+            fileWatcherService.processEvents(recursive);
+            System.out.println("Successfully registered directories.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
 
         final Properties props = new Properties();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "integration-example");
@@ -50,7 +98,6 @@ public class KafkaStreamsIntegrationDemoApplication {
         // Get the source stream.
         final StreamsBuilder builder = new StreamsBuilder();
         final KStream<String, String> source = builder.stream("transformations-input-topic");
-
 
         // Split the stream into two streams, one containing all valid records, and the other containing all other records.
         KStream<String, String>[] branches = source
