@@ -12,7 +12,7 @@ services:
       POSTGRES_PASSWORD: s3cr3tp4ssw0rd
   
   zoo1:
-    image: zookeeper:latest
+    image: confluentinc/cp-zookeeper:6.1.0
     restart: unless-stopped
     hostname: zoo1
     container_name: zookeeper
@@ -27,7 +27,7 @@ services:
       - ./zk-single-kafka-single/zoo1/datalog:/datalog
 
   kafka1:
-    image: confluentinc/cp-kafka:5.5.0
+    image: confluentinc/cp-kafka:6.1.0
     hostname: kafka1
     container_name: kafka1
     ports:

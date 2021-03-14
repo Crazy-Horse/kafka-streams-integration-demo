@@ -1,8 +1,9 @@
 plugins {
-    id 'org.springframework.boot' version '2.2.5.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'org.springframework.boot' version '2.4.3'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'java'
     id 'application'
+    id 'idea'
 }
 
 group = 'com.csv.integration.streams.demo'
@@ -15,12 +16,13 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.apache.camel.springboot:camel-spring-boot-starter:3.8.0'
+    implementation 'org.apache.camel.springboot:camel-kafka-starter:3.8.0'
+    //implementation 'org.apache.camel.springboot:camel-file-watch-starter:3.8.0'
     implementation 'org.apache.kafka:kafka-clients:2.4.1'
     implementation 'org.apache.kafka:kafka-streams:2.4.1'
     runtimeOnly 'org.postgresql:postgresql'
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {

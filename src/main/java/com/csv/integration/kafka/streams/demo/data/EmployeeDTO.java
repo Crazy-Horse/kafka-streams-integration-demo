@@ -108,14 +108,14 @@ public class EmployeeDTO implements Serializable {
 
         switch (fields.length) {
             case 3:
-                employeeDTO.setEmployeeId(Long.valueOf(fields[0]));
-                employeeDTO.setFirstName(fields[1]);
-                employeeDTO.setLastName(fields[2]);
+                employeeDTO.setEmployeeId(Long.valueOf(fields[0].trim()));
+                employeeDTO.setFirstName(fields[1].trim());
+                employeeDTO.setLastName(fields[2].trim());
                 break;
             case 6:
-                employeeDTO.setEmployeeId(Long.valueOf(fields[0]));
-                employeeDTO.setFirstName(fields[1]);
-                employeeDTO.setLastName(fields[2]);
+                employeeDTO.setEmployeeId(Long.valueOf(fields[0].trim()));
+                employeeDTO.setFirstName(fields[1].trim());
+                employeeDTO.setLastName(fields[2].trim());
                 employeeDTO.setYearsOfService(Integer.valueOf(fields[3]));
                 employeeDTO.setDepartmentId(fields[4]);
                 employeeDTO.setManagerId(Long.valueOf(fields[5]));
