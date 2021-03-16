@@ -125,18 +125,4 @@ public class EmployeeDTO implements Serializable {
         }
         return employeeDTO;
     }
-
-    public static boolean validate(String input) {
-        String[] fields = input.split(",");
-        boolean valid = false;
-        switch (fields.length) {
-            case 3:
-            case 6:
-                valid = true;
-                break;
-            default:
-
-        }
-        return valid;
-    }
 }

@@ -34,6 +34,20 @@ public class EmployeeService {
         }
         return employeeDTO;
     }
+    //@Todo Add better validation
+    public static boolean validate(String input) {
+        String[] fields = input.split(",");
+        boolean valid = false;
+        switch (fields.length) {
+            case 3:
+            case 6:
+                valid = true;
+                break;
+            default:
+
+        }
+        return valid;
+    }
 
     public void save(Employee employee, EmployeeDTO emp) {
         employee.setDepartmentId(emp.getDepartmentId());

@@ -56,7 +56,7 @@ public class KafkaStreamsIntegrationDemoApplication {
 
         // Split the stream into two streams, one containing all valid records, and the other containing all other records.
         KStream<String, String>[] branches = source
-                .branch((key, value) -> EmployeeDTO.validate(value), (key, value) -> true);
+                .branch((key, value) -> EmployeeService.validate(value), (key, value) -> true);
         KStream<String, String> validStream = branches[0];
         KStream<String, String> othersStream = branches[1];
 
